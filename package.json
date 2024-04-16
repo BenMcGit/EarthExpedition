@@ -11,14 +11,17 @@
     "format": "prettier \"**/*.{css,js,json,jsx,ts,tsx}\""
   },
   "dependencies": {
+    "@react-leaflet/core": "^2.1.0",
     "dotenv": "^16.3.1",
     "leaflet": "^1.9.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
+    "leaflet-draw": "^1.0.4",
     "next": "latest",
     "openai": "^4.10.0",
     "react": "latest",
     "react-dom": "latest",
     "react-leaflet": "^4.2.1",
+    "react-leaflet-draw": "^0.20.4",
     "react-leaflet-markercluster": "^3.0.0-rc1"
   },
   "devDependencies": {

@@ -7,16 +7,21 @@ import {
   Popup,
   useMapEvents,
   useMap,
+  Circle,
+  FeatureGroup,
 } from 'react-leaflet'
+import { EditControl } from 'react-leaflet-draw'
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
 import 'leaflet-defaulticon-compatibility'
-//2. Define the interface for MarkerData.
+
 interface MarkerData {
   coordinates: [number, number]
   title: string
 }
-//3. Loader component for showing loading animation.
+
+// TODO use daisyUI
 const Loader = () => {
   return (
     <div className="absolute z-[10000] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -48,13 +53,12 @@ const MapComponent: FC = () => {
   const [submittedQuestion, setSubmittedQuestion] = useState<string | null>(
     null,
   )
-  //6. Declare useRef to reference map.
+
   const mapRef = useRef<any | null>(null)
-  //7. ZoomHandler component for handling map zoom events.
+
   const ZoomHandler: FC = () => {
-    //8. Use Leaflet's useMap hook.
     const map = useMap()
-    //9. Function to fly map to given coordinates.
+
     const flyToMarker = (coordinates: [number, number], zoom: number) => {
       if (coordinates && typeof coordinates[0] !== 'undefined') {
         map.flyTo(coordinates, zoom, {
@@ -68,7 +72,7 @@ const MapComponent: FC = () => {
         setLoading(false)
       },
     })
-    //10. useEffect to trigger the map fly when markerData changes.
+
     useEffect(() => {
       if (markerData) {
         if (
@@ -79,17 +83,15 @@ const MapComponent: FC = () => {
         }
       }
     }, [markerData])
-    //11. Return null as we're not rendering anything in the DOM.
+
     return null
   }
-  //12. Function to handle form submission.
+
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      //13. Set loading state and clear the input.
       setSubmittedQuestion(inputValue)
       setInputValue('')
-      //14. Make the API request using fetch.
       const response = await fetch('/api/Coordinates', {
         method: 'POST',
         headers: {
@@ -97,15 +99,13 @@ const MapComponent: FC = () => {
         },
         body: JSON.stringify({ value: inputValue }),
       })
-      //15. Parse and set the response data.
       const data = await response.json()
       setMarkerData(data)
     } catch (error) {
-      //16. Log errors.
       console.error(error)
     }
   }
-  //17. Return the JSX for rendering.
+
   return (
     <>
       {/* 18. Show the loader if loading. */}
@@ -124,18 +124,32 @@ const MapComponent: FC = () => {
         zoom={11}
         style={{ height: '100vh', width: '100vw' }}
       >
-        {/* 21. Set the tile layer for the map. */}
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        {/* 22. Conditionally render the marker. */}
+        <FeatureGroup>
+          <EditControl
+            position="topright"
+            // onEdited={this._onEditPath}
+            // onCreated={this._onCreate}
+            // onDeleted={this._onDeleted}
+            draw={{
+              rectangle: false,
+              circlemarker: false,
+              polygon: false,
+              polyline: false,
+              marker: false,
+            }}
+          />
+        </FeatureGroup>
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        />
         {markerData && markerData.coordinates && (
           <Marker position={markerData.coordinates}>
             <Popup>{markerData.title}</Popup>
           </Marker>
         )}
-        {/* 23. Include the ZoomHandler for zoom events. */}
         <ZoomHandler />
       </MapContainer>
-      {/* 24. Include the form input, submit button and area for submitted question. */}
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex justify-center">
           {submittedQuestion && (
@@ -165,5 +179,5 @@ const MapComponent: FC = () => {
     </>
   )
 }
-//25. Export the MapComponent.
+
 export default MapComponent
