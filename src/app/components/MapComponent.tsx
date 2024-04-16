@@ -1,5 +1,4 @@
-//1. Import dependencies for React, Leaflet and other functionalities.
-import React, { useState, useEffect, useRef, FC } from 'react'
+import React, { useState, useEffect, useRef, FC, useMemo } from 'react'
 import {
   MapContainer,
   TileLayer,
@@ -19,9 +18,9 @@ import 'leaflet-defaulticon-compatibility'
 interface MarkerData {
   coordinates: [number, number]
   title: string
+  description: string
 }
 
-// TODO use daisyUI
 const Loader = () => {
   return (
     <div className="absolute z-[10000] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -44,9 +43,8 @@ const Loader = () => {
     </div>
   )
 }
-//4. Main component definition.
+
 const MapComponent: FC = () => {
-  //5. Initialize local state.
   const [inputValue, setInputValue] = useState<string>('')
   const [markerData, setMarkerData] = useState<MarkerData | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -87,12 +85,30 @@ const MapComponent: FC = () => {
     return null
   }
 
+  const handleGeneration = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/location', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await response.json()
+      setInputValue(data.location)
+      setLoading(false)
+    } catch (error) {
+      console.error(error)
+      setLoading(false)
+    }
+  }
+
   const handleSubmit = async () => {
     setLoading(true)
     try {
       setSubmittedQuestion(inputValue)
       setInputValue('')
-      const response = await fetch('/api/Coordinates', {
+      const response = await fetch('/api/coordinates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,17 +124,13 @@ const MapComponent: FC = () => {
 
   return (
     <>
-      {/* 18. Show the loader if loading. */}
       {loading && <Loader />}
-      {/* 19. Conditionally render the title overlay. */}
-      {markerData && markerData.coordinates && (
-        <div className="flex items-center justify-center absolute top-3 right-3 z-[100000]">
-          <h1 className="text-3xl font-bold text-black p-2 bg-white rounded-md z-[100000]">
-            {markerData.title}
-          </h1>
+      {/* {markerData && markerData.coordinates && (
+        <div className="flex flex-col text-center items-center absolute top-3 right-3 z-[100000] max-w-screen-md">
+          <h1 className="">{markerData.title}</h1>
+          <p>{markerData.description}</p>
         </div>
-      )}
-      {/* 20. Add the map container. */}
+      )} */}
       <MapContainer
         center={[43.6426, -79.3871]}
         zoom={11}
@@ -145,7 +157,10 @@ const MapComponent: FC = () => {
         />
         {markerData && markerData.coordinates && (
           <Marker position={markerData.coordinates}>
-            <Popup>{markerData.title}</Popup>
+            <Popup>
+              <h1 className="font-bold">{markerData.title}</h1>
+              <p>{markerData.description}</p>
+            </Popup>
           </Marker>
         )}
         <ZoomHandler />
@@ -173,6 +188,12 @@ const MapComponent: FC = () => {
             className="p-2 ml-2 bg-blue-500 text-white rounded-md"
           >
             Submit
+          </button>
+          <button
+            onClick={handleGeneration}
+            className="p-2 ml-2 bg-blue-500 text-white rounded-md"
+          >
+            Generate Location
           </button>
         </div>
       </div>

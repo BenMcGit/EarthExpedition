@@ -13,16 +13,13 @@ export default async function handler(req: any, res: any) {
         {
           role: 'system',
           content:
-            'You only return in JSON a coordinates key with a value in this format [43.6426, -79.3871], then a title of the location with a title key, then a description giving more details',
+            'You only return a cryptic phrase about a famous location on earth. This location has exact coordinates and you should be able to determine them but not return them. Do not return any quotation marks.',
         },
-        { role: 'user', content: req.body.value },
       ],
     })
     const responseText = gpt4Completion.choices[0]?.message?.content
-    if (responseText && responseText[0] === '{') {
-      const json = JSON.parse(responseText)
-      res.status(200).json(json)
-      console.log(json)
+    if (responseText) {
+      res.status(200).json({ location: responseText })
     } else {
       res.status(200).json({ tryAgain: true })
     }
