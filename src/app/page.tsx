@@ -1,6 +1,6 @@
 'use client'
 import dynamic from 'next/dynamic'
-const DynamicMapComponent = dynamic(() => import('../modules/MapComponent'), {
+const DynamicMapComponent = dynamic(() => import('./MapComponent'), {
   ssr: false,
 })
 
