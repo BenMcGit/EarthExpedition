@@ -6,7 +6,6 @@ import {
   Popup,
   useMapEvents,
   useMap,
-  Circle,
   FeatureGroup,
 } from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw'
@@ -14,6 +13,7 @@ import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
 import 'leaflet-defaulticon-compatibility'
+import { LatLngExpression } from 'leaflet'
 
 interface MarkerData {
   coordinates: [number, number]
@@ -45,6 +45,7 @@ const Loader = () => {
 }
 
 const MapComponent: FC = () => {
+  const initialCoordinates = [40.7128, -74.006]
   const [inputValue, setInputValue] = useState<string>('')
   const [markerData, setMarkerData] = useState<MarkerData | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
@@ -132,7 +133,7 @@ const MapComponent: FC = () => {
         </div>
       )} */}
       <MapContainer
-        center={[43.6426, -79.3871]}
+        center={initialCoordinates as LatLngExpression}
         zoom={11}
         style={{ height: '100vh', width: '100vw' }}
       >
