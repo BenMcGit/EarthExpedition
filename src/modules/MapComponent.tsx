@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useRef, FC } from 'react'
 import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw'
