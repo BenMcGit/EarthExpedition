@@ -1,13 +1,5 @@
-import React, { useState, useEffect, useRef, FC, useMemo } from 'react'
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-  useMap,
-  FeatureGroup,
-} from 'react-leaflet'
+import React, { useState, useRef, FC } from 'react'
+import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
@@ -16,6 +8,7 @@ import 'leaflet-defaulticon-compatibility'
 import { LatLngExpression } from 'leaflet'
 import Loader from './Loader'
 import ZoomHandler from './ZoomHandler'
+import MapMarker from './Marker'
 
 export interface MarkerData {
   coordinates: [number, number]
@@ -104,14 +97,7 @@ const MapComponent: FC = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        {markerData && markerData.coordinates && (
-          <Marker position={markerData.coordinates}>
-            <Popup>
-              <h1 className="font-bold">{markerData.title}</h1>
-              <p>{markerData.description}</p>
-            </Popup>
-          </Marker>
-        )}
+        <MapMarker markerData={markerData} />
         <ZoomHandler
           markerData={markerData}
           onZoomEnd={() => setLoading(false)}
