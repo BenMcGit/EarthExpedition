@@ -5,7 +5,7 @@ dotenv.config()
 
 const openai = new OpenAI()
 
-export default async function handler(req: any, res: any) {
+export default async function POST(req: any, res: any) {
   try {
     const gpt4Completion = await openai.chat.completions.create({
       model: 'gpt-4',
