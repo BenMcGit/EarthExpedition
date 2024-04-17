@@ -17,7 +17,7 @@ export interface MarkerData {
 }
 
 const MapComponent: FC = () => {
-  const initialCoordinates = [40.7128, -74.006]
+  const initialCoordinates = [37.7749, -122.4194]
   const [inputValue, setInputValue] = useState<string>('')
   const [markerData, setMarkerData] = useState<MarkerData | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
