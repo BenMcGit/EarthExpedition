@@ -22,7 +22,6 @@ export default async function handler(req: any, res: any) {
     if (responseText && responseText[0] === '{') {
       const json = JSON.parse(responseText)
       res.status(200).json(json)
-      console.log(json)
     } else {
       res.status(200).json({ tryAgain: true })
     }
