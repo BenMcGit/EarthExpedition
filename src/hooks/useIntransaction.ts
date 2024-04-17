@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react'
 //hooks for async functions
 //loading is true when function is executing, false when done
+
 const useInTransaction = <T extends (...params: any) => Promise<any>>(
-  transactionAction: T
+  transactionAction: T,
 ) => {
   const [loading, setStatus] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
@@ -23,7 +24,7 @@ const useInTransaction = <T extends (...params: any) => Promise<any>>(
         console.log('Handle action err', err)
       }
     },
-    [transactionAction]
+    [transactionAction],
   )
 
   return {
