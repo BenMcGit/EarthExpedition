@@ -125,7 +125,7 @@ const MapComponent: FC = () => {
                 'p-2 ml-2 bg-blue-500 text-white rounded-md',
                 loading ? 'cursor-not-allowed' : 'cursor-pointer',
               )}
-              value="submit"
+              value="Submit"
             />
           </form>
           <button
