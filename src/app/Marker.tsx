@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { MarkerData } from './MapComponent'
+import { MarkerData } from '@/services/marker'
 import { Marker as LeafletMarker, Popup } from 'react-leaflet'
 
 interface MarkerProps {

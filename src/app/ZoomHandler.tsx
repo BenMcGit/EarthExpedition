@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react'
 import { useMap, useMapEvents } from 'react-leaflet'
-import { MarkerData } from './MapComponent'
+import { MarkerData } from '@/services/marker'
 
 interface ZoomHandlerProps {
   markerData: MarkerData | null

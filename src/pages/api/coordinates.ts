@@ -18,6 +18,7 @@ export default async function handler(req: any, res: any) {
         { role: 'user', content: req.body.value },
       ],
     })
+
     const responseText = gpt4Completion.choices[0]?.message?.content
     if (responseText && responseText[0] === '{') {
       const json = JSON.parse(responseText)
