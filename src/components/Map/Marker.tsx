@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { MarkerData } from '@/services/marker'
-import { Marker as LeafletMarker, Popup } from 'react-leaflet'
+import { Marker, Popup } from 'react-leaflet'
 
 interface MarkerProps {
   markerData: MarkerData | null
@@ -11,12 +11,12 @@ const MapMarker: FC<MarkerProps> = ({ markerData }) => {
     return <></>
   }
   return (
-    <LeafletMarker position={markerData.coordinates}>
+    <Marker position={markerData.coordinates}>
       <Popup>
         <h1 className="font-bold">{markerData.title}</h1>
         <p>{markerData.description}</p>
       </Popup>
-    </LeafletMarker>
+    </Marker>
   )
 }
 

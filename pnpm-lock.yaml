@@ -20,6 +20,9 @@ dependencies:
   dotenv:
     specifier: ^16.3.1
     version: 16.4.5
+  haversine-distance:
+    specifier: ^1.2.1
+    version: 1.2.1
   jotai:
     specifier: ^2.8.0
     version: 2.8.0(@types/react@18.2.79)(react@18.2.0)
@@ -2126,6 +2129,10 @@ packages:
     dependencies:
       function-bind: 1.1.2
     dev: true
+
+  /haversine-distance@1.2.1:
+    resolution: {integrity: sha512-rQpG89d6NlAis0eqOSFXDqNU/GZcMPlHNVMqTSzD16niD9s1fDK8T6kwrK0WJ7OMU+iRNy3cgGYnNQihMqmaHg==}
+    dev: false
 
   /hosted-git-info@4.1.0:
     resolution: {integrity: sha512-kyCuEOWjJqZuDbRHzL8V93NzQhwIB71oFWSyzVo+KPZI+pnQPPxucdkrOZvkLRnrf5URsQM+IJ09Dw29cRALIA==}

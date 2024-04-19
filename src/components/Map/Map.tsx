@@ -1,13 +1,21 @@
 'use client'
-import React, { useState, useRef, FC, useCallback } from 'react'
+import React, { useState, useRef, FC, useCallback, useEffect } from 'react'
 import cx from 'clsx'
-import { MapContainer, TileLayer, FeatureGroup } from 'react-leaflet'
+import {
+  MapContainer,
+  TileLayer,
+  FeatureGroup,
+  Polyline,
+  useMapEvents,
+  Marker,
+  Popup,
+} from 'react-leaflet'
 import { EditControl } from 'react-leaflet-draw'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
 import 'leaflet-defaulticon-compatibility'
-import { LatLngExpression } from 'leaflet'
+import { LatLng, LatLngExpression } from 'leaflet'
 import { useForm, useWatch } from 'react-hook-form'
 import { useMarkerData, useRequestMarkerData } from '@/services/marker'
 import { requestGenerateLocation } from '@/services/location'
@@ -15,6 +23,11 @@ import useInTransaction from '@/hooks/useIntransaction'
 import Loader from './Loader'
 import ZoomHandler from './ZoomHandler'
 import MapMarker from './Marker'
+import { SparkleIcon } from '../Icons'
+import ToolTip from '../Tooltip'
+import LocationMarker from './LocationMarker'
+import useLocationMarker from '@/hooks/useLocationMarker'
+import Line from './Line'
 
 const initialCoordinates = [37.7749, -122.4194]
 
@@ -22,7 +35,7 @@ interface SubmitForm {
   inputPrompts: string
 }
 
-const MapComponent: FC = () => {
+const Map: FC = () => {
   const markerData = useMarkerData()
   const requestMarkerData = useRequestMarkerData()
   const [isloading, setIsLoading] = useState<boolean>(false)
@@ -34,9 +47,8 @@ const MapComponent: FC = () => {
     setValue,
     reset,
   } = useForm<SubmitForm>()
-  const inputPrompts = useWatch({ control, name: 'inputPrompts' })
 
-  // const mapRef = useRef<any | null>(null)
+  const inputPrompts = useWatch({ control, name: 'inputPrompts' })
 
   const handleGeneration = useCallback(async () => {
     try {
@@ -67,32 +79,11 @@ const MapComponent: FC = () => {
   return (
     <>
       {(loading || isloading) && <Loader />}
-      {/* {markerData && markerData.coordinates && (
-        <div className="flex flex-col text-center items-center absolute top-3 right-3 z-[100000] max-w-screen-md">
-          <h1 className="">{markerData.title}</h1>
-          <p>{markerData.description}</p>
-        </div>
-      )} */}
       <MapContainer
         center={initialCoordinates as LatLngExpression}
         zoom={11}
         style={{ height: '100vh', width: '100vw' }}
       >
-        <FeatureGroup>
-          <EditControl
-            position="topright"
-            // onEdited={this._onEditPath}
-            // onCreated={this._onCreate}
-            // onDeleted={this._onDeleted}
-            draw={{
-              rectangle: false,
-              circlemarker: false,
-              polygon: false,
-              polyline: false,
-              marker: false,
-            }}
-          />
-        </FeatureGroup>
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -106,41 +97,49 @@ const MapComponent: FC = () => {
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex justify-center">
           {inputPrompts && (
-            <div className="flex items-center justify-center bottom-16 absolute w-full z-[100000]">
-              <h1 className="text-3xl font-bold text-black p-2 bg-white rounded-md">
+            <div className="flex items-center justify-center bottom-20 absolute w-full z-[100000]">
+              <h1 className="text-xl font-bold text-black p-2 bg-white ring-4 rounded-md ring-slate-500">
                 {inputPrompts}
               </h1>
             </div>
           )}
-          <form onSubmit={withSubmit(handleExecAction)}>
-            <input
-              {...register('inputPrompts', { required: true })}
-              type="text"
-              // value={inputValue}
-              className="flex-grow p-2 border rounded-md"
-            />
-            <input
-              type="submit"
-              className={cx(
-                'p-2 ml-2 bg-blue-500 text-white rounded-md',
-                loading ? 'cursor-not-allowed' : 'cursor-pointer',
-              )}
-              value="Submit"
-            />
-          </form>
-          <button
-            onClick={handleGeneration}
-            className={cx(
-              'p-2 ml-2 bg-blue-500 text-white rounded-md',
-              loading || isloading ? 'cursor-not-allowed' : 'cursor-pointer',
-            )}
-          >
-            Generate Location
-          </button>
+          <div className="w-full">
+            <form
+              className="flex justify-center"
+              onSubmit={withSubmit(handleExecAction)}
+            >
+              <input
+                {...register('inputPrompts', { required: true })}
+                type="text"
+                className="w-2/3 p-2 text-black rounded-l-lg"
+                placeholder="Describe anything that's got specific coordinates – like a spot on a map or an event in time."
+              />
+              <ToolTip
+                className="rounded-xl"
+                text="Have an AI craft a description for you."
+              >
+                <button
+                  className="btn bg-blue-500 p-2 rounded-r-lg hover:ring-2"
+                  onClick={handleGeneration}
+                >
+                  <SparkleIcon className="h-8 w-8 bg-blue-500 text-yellow-400 fill-yellow-400 hover:animate-pulse" />
+                </button>
+              </ToolTip>
+              <button
+                type="submit"
+                className={`p-2 ml-2 bg-blue-500 text-white rounded-lg hover:ring-2 
+                ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                disabled={loading}
+                value="Submit"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </>
   )
 }
 
-export default MapComponent
+export default Map
