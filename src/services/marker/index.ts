@@ -6,7 +6,7 @@ export interface MarkerData {
   coordinates: [number, number];
   title?: string;
   description?: string;
-  travelTip: string;
+  travelTip?: string;
 }
 
 interface MarkerStore {
