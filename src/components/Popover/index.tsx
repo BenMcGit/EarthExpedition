@@ -1,5 +1,5 @@
-'use client'
-import { useRef, useState, PropsWithChildren, SVGAttributes } from 'react'
+'use client';
+import { useRef, useState, PropsWithChildren, SVGAttributes } from 'react';
 import {
   useFloating,
   UseFloatingOptions,
@@ -15,37 +15,37 @@ import {
   OffsetOptions,
   useTransitionStyles,
   UseTransitionStylesProps,
-} from '@floating-ui/react'
+} from '@floating-ui/react';
 import {
   UseHoverProps,
   UseClickProps,
   UseFocusProps,
   UseDismissProps,
   FloatingArrowProps,
-} from '@floating-ui/react'
+} from '@floating-ui/react';
 
 //Only to be used for interaction Popover
 interface ArrowProps
   extends Omit<FloatingArrowProps, 'context'>,
     SVGAttributes<SVGSVGElement> {
-  height?: number
-  width?: number
-  strokeWidth?: number
+  height?: number;
+  width?: number;
+  strokeWidth?: number;
 }
 
-export type InteractionProps = UseHoverProps | UseClickProps | UseFocusProps
+export type InteractionProps = UseHoverProps | UseClickProps | UseFocusProps;
 
 export interface PopoverProps extends PropsWithChildren {
-  Content: React.ReactNode
-  options?: Partial<UseFloatingOptions>
-  trigger?: 'click' | 'hover' | 'focus'
-  controledOpen?: boolean
-  hasArrow?: boolean
-  offsetOptions?: OffsetOptions
-  transitionStylesProps?: UseTransitionStylesProps
-  arrowProps?: ArrowProps
-  interactionProps?: UseHoverProps | UseClickProps | UseFocusProps
-  dismissProps?: UseDismissProps
+  Content: React.ReactNode;
+  options?: Partial<UseFloatingOptions>;
+  trigger?: 'click' | 'hover' | 'focus';
+  controledOpen?: boolean;
+  hasArrow?: boolean;
+  offsetOptions?: OffsetOptions;
+  transitionStylesProps?: UseTransitionStylesProps;
+  arrowProps?: ArrowProps;
+  interactionProps?: UseHoverProps | UseClickProps | UseFocusProps;
+  dismissProps?: UseDismissProps;
 }
 
 const Popover: React.FC<PopoverProps> = ({
@@ -61,8 +61,8 @@ const Popover: React.FC<PopoverProps> = ({
   dismissProps,
   children,
 }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const arrowRef = useRef(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const arrowRef = useRef(null);
   const { refs, floatingStyles, context } = useFloating({
     middleware: [
       arrow({
@@ -74,29 +74,29 @@ const Popover: React.FC<PopoverProps> = ({
     open: isOpen,
     onOpenChange: setIsOpen,
     ...options,
-  })
+  });
 
   const triggerOption = () => {
     switch (trigger) {
       case 'click':
-        return useClick(context, interactionProps)
+        return useClick(context, interactionProps);
       case 'focus':
-        return useFocus(context, interactionProps)
+        return useFocus(context, interactionProps);
       case 'hover':
-        return useHover(context, interactionProps)
+        return useHover(context, interactionProps);
     }
-  }
+  };
 
-  const dismiss = useDismiss(context, dismissProps)
+  const dismiss = useDismiss(context, dismissProps);
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     triggerOption(),
     dismiss,
-  ])
+  ]);
 
   const { isMounted, styles } = useTransitionStyles(context, {
     ...transitionStylesProps,
-  })
+  });
 
   return (
     <>
@@ -116,7 +116,7 @@ const Popover: React.FC<PopoverProps> = ({
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default Popover
+export default Popover;

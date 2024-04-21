@@ -43,4 +43,3 @@
 .fui-button--contained.fui-button--amber:hover {
   @apply bg-[rgba(255,255,255,0.12);] text-[#ffffff];
 }
-

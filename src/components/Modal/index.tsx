@@ -1,6 +1,6 @@
-'use client'
+'use client';
 //TODO: tooltip, Modal can abstract out popup
-import { ReactNode, useCallback } from 'react'
+import { ReactNode, useCallback } from 'react';
 import {
   useFloating,
   useClick,
@@ -10,72 +10,72 @@ import {
   useId,
   FloatingOverlay,
   FloatingFocusManager,
-} from '@floating-ui/react'
-import { atom, useAtom, useSetAtom } from 'jotai'
-import cx from 'clsx'
-import { uniqueId } from 'lodash-es'
-import { CloseIcon } from '../Icons'
-import renderReactNode from '@/utils/renderReactNode'
+} from '@floating-ui/react';
+import { atom, useAtom, useSetAtom } from 'jotai';
+import cx from 'clsx';
+import { uniqueId } from 'lodash-es';
+import { CloseIcon } from '../Icons';
+import renderReactNode from '@/utils/renderReactNode';
 
 export interface Modal {
-  id: string
-  title: string
-  content: ReactNode
-  headClass?: string
-  containerClass?: string
-  wrapperClass?: string
+  id: string;
+  title: string;
+  content: ReactNode;
+  headClass?: string;
+  containerClass?: string;
+  wrapperClass?: string;
 }
-const isOpenAtom = atom(false)
-const modalAtom = atom<Modal | null>(null)
+const isOpenAtom = atom(false);
+const modalAtom = atom<Modal | null>(null);
 
 export const useModal = (param?: Omit<Modal, 'id'>) => {
-  const setIsOpen = useSetAtom(isOpenAtom)
-  const setModal = useSetAtom(modalAtom)
+  const setIsOpen = useSetAtom(isOpenAtom);
+  const setModal = useSetAtom(modalAtom);
 
   const showModal = useCallback(() => {
-    if (!param) return
-    setModal({ ...param, id: uniqueId() })
-    setIsOpen(true)
-  }, [])
+    if (!param) return;
+    setModal({ ...param, id: uniqueId() });
+    setIsOpen(true);
+  }, []);
 
   const hideModal = useCallback(() => {
-    setIsOpen(false)
-    setModal(null)
-  }, [])
+    setIsOpen(false);
+    setModal(null);
+  }, []);
 
-  return { showModal, hideModal }
-}
+  return { showModal, hideModal };
+};
 
 const ModalRender: React.FC = () => {
-  const [isOpen, setIsOpen] = useAtom(isOpenAtom)
-  const [modal, setModal] = useAtom(modalAtom)
+  const [isOpen, setIsOpen] = useAtom(isOpenAtom);
+  const [modal, setModal] = useAtom(modalAtom);
   const handleOpen = useCallback((open: boolean, event?: Event) => {
-    setIsOpen(open)
-    if (!open) setModal(null)
-  }, [])
+    setIsOpen(open);
+    if (!open) setModal(null);
+  }, []);
 
   const { refs, context } = useFloating({
     open: isOpen,
     onOpenChange: handleOpen,
-  })
+  });
 
-  const click = useClick(context)
+  const click = useClick(context);
 
   const dismiss = useDismiss(context, {
     outsidePressEvent: 'mousedown',
-  })
+  });
 
-  const role = useRole(context)
+  const role = useRole(context);
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     click,
     dismiss,
     role,
-  ])
+  ]);
 
-  const labelId = useId()
+  const labelId = useId();
 
-  const descriptionId = useId()
+  const descriptionId = useId();
 
   return (
     <>
@@ -86,7 +86,7 @@ const ModalRender: React.FC = () => {
           style={{ background: 'rgba(0, 0, 0, 0.7)', zIndex: 10 }}
           className={cx(
             'flex items-center justify-center backdrop-blur-[15px]',
-            modal?.containerClass
+            modal?.containerClass,
           )}
         >
           <FloatingFocusManager context={context}>
@@ -99,13 +99,13 @@ const ModalRender: React.FC = () => {
               <div
                 className={cx(
                   'p-[27px] min-w-[311px] rounded-[12px] border-[1px] border-solid border-[#ffffff] bg-[rgba(255,255,255,0.12)] backdrop-blur-[103px]',
-                  modal?.wrapperClass
+                  modal?.wrapperClass,
                 )}
               >
                 <div
                   className={cx(
                     'flex justify-between items-center h-[36px] text-[24px] leading-[36px] -tracking-[0.46px] text-[#fff] font-semibold',
-                    modal?.headClass
+                    modal?.headClass,
                   )}
                 >
                   {modal?.title}
@@ -126,7 +126,7 @@ const ModalRender: React.FC = () => {
         </FloatingOverlay>
       )}
     </>
-  )
-}
+  );
+};
 
-export default ModalRender
+export default ModalRender;

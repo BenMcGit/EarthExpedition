@@ -1,15 +1,15 @@
-'use client'
-import React, { useState, type ComponentProps } from 'react'
-import cx from 'clsx'
-import { uniqueId } from 'lodash-es'
-import './index.css'
+'use client';
+import React, { useState, type ComponentProps } from 'react';
+import cx from 'clsx';
+import { uniqueId } from 'lodash-es';
+import './index.css';
 
 const Spin: React.FC<ComponentProps<'div'> & { theme?: 'light' | 'dark' }> = ({
   className,
   theme = 'dark',
 }) => {
-  const [rightId] = useState(() => uniqueId('spin-right'))
-  const [leftId] = useState(() => uniqueId('spin-left'))
+  const [rightId] = useState(() => uniqueId('spin-right'));
+  const [leftId] = useState(() => uniqueId('spin-left'));
 
   return (
     <span className={cx('relative block w-1em h-1em leading-1em', className)}>
@@ -67,7 +67,7 @@ const Spin: React.FC<ComponentProps<'div'> & { theme?: 'light' | 'dark' }> = ({
           />
           <circle
             className={cx(
-              theme === 'light' ? 'fill-#F0EEE9' : 'fill-purple-normal'
+              theme === 'light' ? 'fill-#F0EEE9' : 'fill-purple-normal',
             )}
             cx="100"
             cy="10"
@@ -76,7 +76,7 @@ const Spin: React.FC<ComponentProps<'div'> & { theme?: 'light' | 'dark' }> = ({
         </g>
       </svg>
     </span>
-  )
-}
+  );
+};
 
-export default Spin
+export default Spin;

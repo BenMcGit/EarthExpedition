@@ -1,9 +1,9 @@
-import OpenAI from 'openai'
-import dotenv from 'dotenv'
+import OpenAI from 'openai';
+import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
-const openai = new OpenAI()
+const openai = new OpenAI();
 
 export default async function handler(req: any, res: any) {
   try {
@@ -17,16 +17,16 @@ export default async function handler(req: any, res: any) {
         },
         { role: 'user', content: req.body.value },
       ],
-    })
+    });
 
-    const responseText = gpt4Completion.choices[0]?.message?.content
+    const responseText = gpt4Completion.choices[0]?.message?.content;
     if (responseText && responseText[0] === '{') {
-      const json = JSON.parse(responseText)
-      res.status(200).json(json)
+      const json = JSON.parse(responseText);
+      res.status(200).json(json);
     } else {
-      res.status(200).json({ tryAgain: true })
+      res.status(200).json({ tryAgain: true });
     }
   } catch (error) {
-    res.status(500).json({ error })
+    res.status(500).json({ error });
   }
 }

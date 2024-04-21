@@ -1,20 +1,20 @@
-'use client'
-import React, { type HTMLAttributes } from 'react'
+'use client';
+import React, { type HTMLAttributes } from 'react';
 // import { atom, useAtom } from 'jotai'
-import { create } from 'zustand'
-import { useShallow } from 'zustand/react/shallow'
-import cx from 'clsx'
-import { CloseIcon } from '../Icons'
+import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
+import cx from 'clsx';
+import { CloseIcon } from '../Icons';
 
 interface Props {
-  title?: string
-  children?: React.ReactNode
+  title?: string;
+  children?: React.ReactNode;
 }
 
 export interface ShowBoardStore {
-  showBoard: boolean
-  setShowBoard: (showBoard: boolean) => void
-  toggleShowBoard: () => void
+  showBoard: boolean;
+  setShowBoard: (showBoard: boolean) => void;
+  toggleShowBoard: () => void;
 }
 
 // const showBoardAtom = atom(false)
@@ -22,7 +22,7 @@ export const useShowBoardStore = create<ShowBoardStore>((set) => ({
   showBoard: false,
   toggleShowBoard: () => set((state) => ({ showBoard: !state.showBoard })),
   setShowBoard: (showBoard) => set({ showBoard }),
-}))
+}));
 
 // export const toggleShowBoardAtom = atom(
 //   (get) => get(showBoardAtom),
@@ -43,7 +43,7 @@ const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
       showBoard: state.showBoard,
       toggleShowBoard: state.toggleShowBoard,
     })),
-  )
+  );
 
   return (
     <div
@@ -64,7 +64,7 @@ const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
       </div>
       {children}
     </div>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;

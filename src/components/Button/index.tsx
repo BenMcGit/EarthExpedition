@@ -1,14 +1,14 @@
-import React, { forwardRef, type PropsWithChildren } from 'react'
-import Spin from '../Spin'
-import cx from 'clsx'
-import './index.css'
+import React, { forwardRef, type PropsWithChildren } from 'react';
+import Spin from '../Spin';
+import cx from 'clsx';
+import './index.css';
 
 export interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  color?: 'primary' | 'white' | 'secondary' | 'amber'
-  variant?: 'contained' | 'outlined' | 'text'
-  fullWidth?: boolean
-  loading?: boolean
-  size?: 'small' | 'medium' | 'large'
+  color?: 'primary' | 'white' | 'secondary' | 'amber';
+  variant?: 'contained' | 'outlined' | 'text';
+  fullWidth?: boolean;
+  loading?: boolean;
+  size?: 'small' | 'medium' | 'large';
 }
 
 const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
@@ -24,7 +24,7 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
       size = 'medium',
       ...props
     },
-    _forwardRef
+    _forwardRef,
   ) => {
     return (
       <button
@@ -35,15 +35,15 @@ const Button = forwardRef<HTMLButtonElement, PropsWithChildren<Props>>(
           (loading || disabled) &&
             'bg-gray-400 opacity-30 pointer-events-none cursor-not-allowed',
           fullWidth ? 'w-full' : 'w-fit',
-          className
+          className,
         )}
         {...props}
       >
         {/* {loading && <Spin className="mr-[8px] w-[18px] h-[18px]" />} */}
         {children}
       </button>
-    )
-  }
-)
+    );
+  },
+);
 
-export default Button
+export default Button;

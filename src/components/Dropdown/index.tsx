@@ -1,11 +1,11 @@
-import React from 'react'
-import { safePolygon } from '@floating-ui/react'
-import Popover, { PopoverProps, InteractionProps } from '@/components/Popover'
+import React from 'react';
+import { safePolygon } from '@floating-ui/react';
+import Popover, { PopoverProps, InteractionProps } from '@/components/Popover';
 
 type DropdownProps = OverWrite<
   PopoverProps,
   { trigger?: 'hover' | 'focus' | 'click'; interactionProps?: InteractionProps }
->
+>;
 
 const Dropdown: React.FC<DropdownProps> = ({
   Content,
@@ -35,7 +35,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     >
       {children}
     </Popover>
-  )
-}
+  );
+};
 
-export default Dropdown
+export default Dropdown;
