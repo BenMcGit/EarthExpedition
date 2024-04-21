@@ -1,10 +1,12 @@
 import { create } from 'zustand'
 import { fetchApi } from '@/utils/fetch'
+import { useShowBoardStore } from '@/components/Board'
 
 export interface MarkerData {
   coordinates: [number, number]
   title: string
   description: string
+  travelTip: string
 }
 
 interface MarkerStore {
@@ -22,6 +24,7 @@ const useMarkerStore = create<MarkerStore>((set) => ({
         params: { value: prompts },
       })
       set({ data })
+      setTimeout(() => useShowBoardStore.setState({ showBoard: true }), 1000)
     } catch (error) {
       console.error(error)
     }

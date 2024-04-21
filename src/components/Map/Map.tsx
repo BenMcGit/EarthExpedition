@@ -25,6 +25,7 @@ import ZoomHandler from './ZoomHandler'
 import MapMarker from './Marker'
 import { SparkleIcon } from '../Icons'
 import ToolTip from '../Tooltip'
+import TravelBoard from '@/modules/travelBoard'
 import LocationMarker from './LocationMarker'
 import useLocationMarker from '@/hooks/useLocationMarker'
 import Line from './Line'
@@ -94,6 +95,7 @@ const Map: FC = () => {
           onZoomEnd={() => setIsLoading(false)}
         />
       </MapContainer>
+      <TravelBoard />
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex justify-center">
           {inputPrompts && (
