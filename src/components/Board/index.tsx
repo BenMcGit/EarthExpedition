@@ -1,5 +1,5 @@
 'use client';
-import React, { type HTMLAttributes } from 'react';
+import React, { useCallback, HTMLAttributes } from 'react';
 // import { atom, useAtom } from 'jotai'
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
@@ -14,15 +14,23 @@ interface Props {
 export interface ShowBoardStore {
   showBoard: boolean;
   setShowBoard: (showBoard: boolean) => void;
-  toggleShowBoard: () => void;
 }
 
 // const showBoardAtom = atom(false)
 export const useShowBoardStore = create<ShowBoardStore>((set) => ({
   showBoard: false,
-  toggleShowBoard: () => set((state) => ({ showBoard: !state.showBoard })),
   setShowBoard: (showBoard) => set({ showBoard }),
 }));
+
+const selectors = {
+  board: (state: ShowBoardStore) => state,
+  showBoard: (state: ShowBoardStore) => state.showBoard,
+  setShowBoard: (state: ShowBoardStore) => state.setShowBoard,
+};
+
+export const useSetShowBoard = () => useShowBoardStore(selectors.setShowBoard);
+export const useShowBoard = () => useShowBoardStore(selectors.showBoard);
+export const useBoard = () => useShowBoardStore(selectors.board);
 
 // export const toggleShowBoardAtom = atom(
 //   (get) => get(showBoardAtom),
@@ -38,12 +46,11 @@ const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
   children,
 }) => {
   // const [showBoard, setShowBoard] = useAtom(showBoardAtom)
-  const { showBoard, toggleShowBoard } = useShowBoardStore(
-    useShallow((state) => ({
-      showBoard: state.showBoard,
-      toggleShowBoard: state.toggleShowBoard,
-    })),
-  );
+  const { showBoard, setShowBoard } = useBoard();
+
+  const handleClose = useCallback(() => {
+    setShowBoard(false);
+  }, []);
 
   return (
     <div
@@ -58,7 +65,7 @@ const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
         <p className="flex items-center text-[24px] leading-[36px] text-[#000000] font-semibold">
           {title}
         </p>
-        <div className="w-fit h-fit cursor-pointer" onClick={toggleShowBoard}>
+        <div className="w-fit h-fit cursor-pointer" onClick={handleClose}>
           <CloseIcon />
         </div>
       </div>

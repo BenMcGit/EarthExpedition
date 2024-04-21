@@ -7,6 +7,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useMarkerData, useRequestMarkerData } from '@/services/marker';
 import { requestGenerateLocation } from '@/services/location';
 import useInTransaction from '@/hooks/useIntransaction';
+import { useSetShowBoard } from '../Board';
 import Loader from './Loader';
 import ZoomHandler from './ZoomHandler';
 import { SparkleIcon } from '../Icons';
@@ -27,6 +28,7 @@ interface SubmitForm {
 const Map: FC = () => {
   const markerData = useMarkerData();
   const requestMarkerData = useRequestMarkerData();
+  const setShowBoard = useSetShowBoard();
   const [isloading, setIsLoading] = useState<boolean>(false);
   const {
     register,
@@ -58,6 +60,7 @@ const Map: FC = () => {
       reset({
         inputPrompts: '',
       });
+      setShowBoard(true);
     } catch (error) {
       console.error(error);
     }

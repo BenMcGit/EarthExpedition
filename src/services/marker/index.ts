@@ -24,7 +24,6 @@ const useMarkerStore = create<MarkerStore>((set) => ({
         params: { value: prompts },
       });
       set({ data });
-      setTimeout(() => useShowBoardStore.setState({ showBoard: true }), 1000);
     } catch (error) {
       console.error(error);
     }
