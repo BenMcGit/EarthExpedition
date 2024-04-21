@@ -6,14 +6,18 @@ dotenv.config();
 const openai = new OpenAI();
 
 export default async function handler(req: any, res: any) {
+  // Retrieve the category from the request body
+  const category = req.body.inputPrompts;
+  // Create a system message dynamically based on the category
+  const systemMessage = `You only return a cryptic phrase about a ${category.toLowerCase()} location on earth. This location has exact coordinates and you should be able to determine them but not return them. Do not return any quotation marks.`;
+
   try {
     const gpt4Completion = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [
         {
           role: 'system',
-          content:
-            'You only return a cryptic phrase about a famous location on earth. This location has exact coordinates and you should be able to determine them but not return them. Do not return any quotation marks.',
+          content: systemMessage,
         },
       ],
     });

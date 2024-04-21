@@ -39,16 +39,18 @@ const Map: FC = () => {
   const inputPrompts = useWatch({ control, name: 'inputPrompts' });
 
   const handleGeneration = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const data = await requestGenerateLocation();
-      setValue('inputPrompts', data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+    if (inputPrompts) {
+      try {
+        setIsLoading(true);
+        const data = await requestGenerateLocation(inputPrompts);
+        setValue('inputPrompts', data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, []);
+  }, [inputPrompts]);
 
   const handleSubmit = useCallback(async (data: SubmitForm) => {
     try {
@@ -96,12 +98,17 @@ const Map: FC = () => {
               className="flex justify-center"
               onSubmit={withSubmit(handleExecAction)}
             >
-              <input
+              <select
                 {...register('inputPrompts', { required: true })}
-                type="text"
                 className="w-2/3 p-2 text-black rounded-l-lg"
-                placeholder="Describe anything that's got specific coordinates – like a spot on a map or an event in time."
-              />
+              >
+                <option value="">Select a category</option>
+                <option value="Famous Places">Famous Places</option>
+                <option value="Famous Food">Famous Food</option>
+                <option value="Famous Football Stadiums">
+                  Famous Football Stadiums
+                </option>
+              </select>
               <ToolTip
                 className="rounded-xl"
                 text="Have an AI craft a description for you."
