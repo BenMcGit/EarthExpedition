@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC } from 'react';
 
 interface LoaderProps {}
 
@@ -22,7 +22,7 @@ const Loader: FC<LoaderProps> = () => {
         />
       </svg>
     </div>
-  )
-}
+  );
+};
 
-export default Loader
+export default Loader;

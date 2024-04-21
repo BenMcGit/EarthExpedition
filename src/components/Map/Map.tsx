@@ -1,44 +1,32 @@
-'use client'
-import React, { useState, useRef, FC, useCallback, useEffect } from 'react'
-import cx from 'clsx'
-import {
-  MapContainer,
-  TileLayer,
-  FeatureGroup,
-  Polyline,
-  useMapEvents,
-  Marker,
-  Popup,
-} from 'react-leaflet'
-import { EditControl } from 'react-leaflet-draw'
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-draw/dist/leaflet.draw.css'
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
-import 'leaflet-defaulticon-compatibility'
-import { LatLng, LatLngExpression } from 'leaflet'
-import { useForm, useWatch } from 'react-hook-form'
-import { useMarkerData, useRequestMarkerData } from '@/services/marker'
-import { requestGenerateLocation } from '@/services/location'
-import useInTransaction from '@/hooks/useIntransaction'
-import Loader from './Loader'
-import ZoomHandler from './ZoomHandler'
-import MapMarker from './Marker'
-import { SparkleIcon } from '../Icons'
-import ToolTip from '../Tooltip'
-import LocationMarker from './LocationMarker'
-import useLocationMarker from '@/hooks/useLocationMarker'
-import Line from './Line'
+'use client';
 
-const initialCoordinates = [37.7749, -122.4194]
+import React, { useState, FC, useCallback } from 'react';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import { LatLngExpression } from 'leaflet';
+import { useForm, useWatch } from 'react-hook-form';
+import { useMarkerData, useRequestMarkerData } from '@/services/marker';
+import { requestGenerateLocation } from '@/services/location';
+import useInTransaction from '@/hooks/useIntransaction';
+import Loader from './Loader';
+import ZoomHandler from './ZoomHandler';
+import { SparkleIcon } from '../Icons';
+import ToolTip from '../Tooltip';
+import LinePlot from './LinePlot';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-draw/dist/leaflet.draw.css';
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
+import 'leaflet-defaulticon-compatibility';
+
+const initialCoordinates = [37.7749, -122.4194];
 
 interface SubmitForm {
-  inputPrompts: string
+  inputPrompts: string;
 }
 
 const Map: FC = () => {
-  const markerData = useMarkerData()
-  const requestMarkerData = useRequestMarkerData()
-  const [isloading, setIsLoading] = useState<boolean>(false)
+  const markerData = useMarkerData();
+  const requestMarkerData = useRequestMarkerData();
+  const [isloading, setIsLoading] = useState<boolean>(false);
   const {
     register,
     control,
@@ -46,35 +34,35 @@ const Map: FC = () => {
     formState: { errors },
     setValue,
     reset,
-  } = useForm<SubmitForm>()
+  } = useForm<SubmitForm>();
 
-  const inputPrompts = useWatch({ control, name: 'inputPrompts' })
+  const inputPrompts = useWatch({ control, name: 'inputPrompts' });
 
   const handleGeneration = useCallback(async () => {
     try {
-      setIsLoading(true)
-      const data = await requestGenerateLocation()
-      setValue('inputPrompts', data)
+      setIsLoading(true);
+      const data = await requestGenerateLocation();
+      setValue('inputPrompts', data);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   const handleSubmit = useCallback(async (data: SubmitForm) => {
     try {
-      const { inputPrompts } = data
-      await requestMarkerData(inputPrompts)
+      const { inputPrompts } = data;
+      await requestMarkerData(inputPrompts);
       reset({
         inputPrompts: '',
-      })
+      });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }, [])
+  }, []);
 
-  const { handleExecAction, loading } = useInTransaction(handleSubmit)
+  const { handleExecAction, loading } = useInTransaction(handleSubmit);
 
   return (
     <>
@@ -88,11 +76,11 @@ const Map: FC = () => {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         />
-        <MapMarker markerData={markerData} />
         <ZoomHandler
           markerData={markerData}
           onZoomEnd={() => setIsLoading(false)}
         />
+        <LinePlot endCoordinates={markerData} />
       </MapContainer>
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex justify-center">
@@ -139,7 +127,7 @@ const Map: FC = () => {
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Map
+export default Map;

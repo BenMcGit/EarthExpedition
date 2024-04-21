@@ -1,6 +1,6 @@
-'use client'
-import { useState, ComponentProps, useCallback, forwardRef } from 'react'
-import cx from 'clsx'
+'use client';
+import { useState, ComponentProps, useCallback, forwardRef } from 'react';
+import cx from 'clsx';
 import {
   useFloating,
   autoUpdate,
@@ -9,22 +9,22 @@ import {
   useDismiss,
   offset,
   type Placement,
-} from '@floating-ui/react'
+} from '@floating-ui/react';
 
 interface Option {
-  label: string
-  value: string | number
+  label: string;
+  value: string | number;
 }
 
 type SelectProps = OverWrite<
   ComponentProps<'select'>,
   {
-    placeholder?: string
-    placement?: Placement
-    options: Option[]
-    defaultValue?: Option
+    placeholder?: string;
+    placement?: Placement;
+    options: Option[];
+    defaultValue?: Option;
   }
->
+>;
 
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
@@ -42,9 +42,9 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ) => {
     const [selectedOption, setSelectedOption] = useState<Option | undefined>(
       defaultValue,
-    )
-    const [isOpen, setIsOpen] = useState(false)
-    const [isHover, setIsHover] = useState(false)
+    );
+    const [isOpen, setIsOpen] = useState(false);
+    const [isHover, setIsHover] = useState(false);
 
     const { refs, floatingStyles, context } = useFloating({
       middleware: [offset(4)],
@@ -52,32 +52,32 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       whileElementsMounted: autoUpdate,
       open: isOpen,
       onOpenChange: setIsOpen,
-    })
+    });
 
-    const click = useClick(context, { event: 'mousedown' })
-    const dismiss = useDismiss(context, { outsidePressEvent: 'mousedown' })
+    const click = useClick(context, { event: 'mousedown' });
+    const dismiss = useDismiss(context, { outsidePressEvent: 'mousedown' });
 
     const handleMouseEnter = useCallback(() => {
-      setIsHover(true)
-    }, [])
+      setIsHover(true);
+    }, []);
 
     const handleMouseLeave = useCallback(() => {
-      setIsHover(false)
-    }, [])
+      setIsHover(false);
+    }, []);
 
     const { getReferenceProps, getFloatingProps } = useInteractions([
       click,
       dismiss,
-    ])
+    ]);
 
     const handleSelect = useCallback(
       (option: Option) => {
-        setSelectedOption(option)
-        setIsOpen(false)
-        onChange?.({ target: { value: option.value, name } } as any)
+        setSelectedOption(option);
+        setIsOpen(false);
+        onChange?.({ target: { value: option.value, name } } as any);
       },
       [onChange],
-    )
+    );
 
     return (
       <div className="relative" suppressHydrationWarning>
@@ -121,8 +121,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           </div>
         )}
       </div>
-    )
+    );
   },
-)
+);
 
-export default Select
+export default Select;
