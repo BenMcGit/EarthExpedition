@@ -16,7 +16,7 @@ const ToolTip: React.FC<
   text,
   className,
   options = {
-    placement: 'top',
+    placement: 'bottom',
   },
   hasArrow = true,
   // delay = 180,

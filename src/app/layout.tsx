@@ -7,7 +7,7 @@ import ModalRender from '@/components/Modal';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Earth Exploration',
+  title: 'Earth Expedition',
 };
 
 export default function RootLayout({

@@ -59,8 +59,8 @@ const LinePlot: FC<LinePlotProps> = ({ endCoordinates }) => {
 
   return (
     <>
-      <MapMarker markerData={startCoordinates || null} />
-      <Polyline positions={positions} color="red" />
+      {/* <MapMarker markerData={startCoordinates || null} />
+      <Polyline positions={positions} color="red" /> */}
       <MapMarker markerData={endCoordinates || null} />
     </>
   );

@@ -10,7 +10,7 @@ import useInTransaction from '@/hooks/useIntransaction';
 import { useSetShowBoard } from '../Board';
 import Loader from './Loader';
 import ZoomHandler from './ZoomHandler';
-import { SparkleIcon } from '../Icons';
+import { ResetIcon, SearchIcon, SparkleIcon } from '../Icons';
 import ToolTip from '../Tooltip';
 import LinePlot from './LinePlot';
 import 'leaflet/dist/leaflet.css';
@@ -53,6 +53,13 @@ const Map: FC = () => {
     }
   }, []);
 
+  const handleReset = () => {
+    setShowBoard(false);
+    reset({
+      inputPrompts: '',
+    });
+  };
+
   const handleSubmit = useCallback(async (data: SubmitForm) => {
     try {
       const { inputPrompts } = data;
@@ -87,6 +94,26 @@ const Map: FC = () => {
         <LinePlot endCoordinates={markerData} />
       </MapContainer>
       <TravelBoard />
+      <div className="absolute top-3 left-0 w-full z-[10000] p-3">
+        <div className="flex justify-end space-x-2">
+          <ToolTip className="rounded-xl" text="Learn something new!">
+            <button
+              className="btn bg-blue-500 p-2 rounded-lg hover:ring-2"
+              onClick={handleGeneration}
+            >
+              <SparkleIcon className="h-4 w-4 bg-blue-500 text-yellow-400 fill-yellow-400 hover:animate-pulse" />
+            </button>
+          </ToolTip>
+          <ToolTip className="rounded-xl" text="Reset">
+            <button
+              className="btn bg-blue-500 p-2 rounded-lg hover:ring-2"
+              onClick={handleReset}
+            >
+              <ResetIcon className="h-4 w-4 bg-blue-500 text-yellow-400" />
+            </button>
+          </ToolTip>
+        </div>
+      </div>
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex justify-center">
           {inputPrompts && (
@@ -104,20 +131,9 @@ const Map: FC = () => {
               <input
                 {...register('inputPrompts', { required: true })}
                 type="text"
-                className="w-2/3 p-2 text-black rounded-l-lg"
-                placeholder="Describe anything that's got specific coordinates – like a spot on a map or an event in time."
+                className="w-2/3 p-2 text-black rounded-lg"
+                placeholder="Search anything with coordinates..."
               />
-              <ToolTip
-                className="rounded-xl"
-                text="Have an AI craft a description for you."
-              >
-                <button
-                  className="btn bg-blue-500 p-2 rounded-r-lg hover:ring-2"
-                  onClick={handleGeneration}
-                >
-                  <SparkleIcon className="h-8 w-8 bg-blue-500 text-yellow-400 fill-yellow-400 hover:animate-pulse" />
-                </button>
-              </ToolTip>
               <button
                 type="submit"
                 className={`p-2 ml-2 bg-blue-500 text-white rounded-lg hover:ring-2 
@@ -125,7 +141,7 @@ const Map: FC = () => {
                 disabled={loading}
                 value="Submit"
               >
-                Submit
+                <SearchIcon className="h-4 w-8 bg-blue-500 text-yellow-400" />
               </button>
             </form>
           </div>
