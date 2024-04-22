@@ -7,6 +7,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useMarkerData, useRequestMarkerData } from '@/services/marker';
 import { requestGenerateLocation } from '@/services/location';
 import useInTransaction from '@/hooks/useIntransaction';
+import { useSetShowBoard } from '../Board';
 import Loader from './Loader';
 import ZoomHandler from './ZoomHandler';
 import { SparkleIcon } from '../Icons';
@@ -16,6 +17,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
+import TravelBoard from '@/modules/travelBoard';
 
 const initialCoordinates = [37.7749, -122.4194];
 
@@ -26,6 +28,7 @@ interface SubmitForm {
 const Map: FC = () => {
   const markerData = useMarkerData();
   const requestMarkerData = useRequestMarkerData();
+  const setShowBoard = useSetShowBoard();
   const [isloading, setIsLoading] = useState<boolean>(false);
   const {
     register,
@@ -57,6 +60,7 @@ const Map: FC = () => {
       reset({
         inputPrompts: '',
       });
+      setShowBoard(true);
     } catch (error) {
       console.error(error);
     }
@@ -82,6 +86,7 @@ const Map: FC = () => {
         />
         <LinePlot endCoordinates={markerData} />
       </MapContainer>
+      <TravelBoard />
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex justify-center">
           {inputPrompts && (
