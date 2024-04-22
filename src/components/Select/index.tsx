@@ -33,7 +33,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       className,
       defaultValue,
       placeholder = 'Select',
-      placement = 'bottom',
+      placement = 'top',
       onChange,
       name,
       ...props
@@ -86,7 +86,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={refs.setReference}
           {...getReferenceProps()}
           className={cx(
-            'pl-[12px] pr-[7px] flex items-center justify-between w-[240px] h-[32px] text-[14px] leading-[22px] rounded-[8px] border-[#DCDEE0] border-[1px] border-solid focus:border-[#FFA14A] hover:border-[#FFA14A] cursor-pointer',
+            'pl-[12px] pr-[7px] flex items-center justify-between w-[240px] h-[50px] text-[14px] leading-[22px] border-[#DCDEE0] border-[1px] border-solid focus:border-[#FFA14A] hover:border-[#FFA14A] cursor-pointer',
             isOpen && 'border-[#FFA14A]',
             className,
           )}

@@ -16,6 +16,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
+import Select from '../Select';
 
 const initialCoordinates = [37.7749, -122.4194];
 
@@ -66,6 +67,13 @@ const Map: FC = () => {
 
   const { handleExecAction, loading } = useInTransaction(handleSubmit);
 
+  const selectOptions = [
+    { label: 'Select a category', value: '' },
+    { label: 'Famous Places', value: 'Famous Places' },
+    { label: 'Famous Food', value: 'Famous Food' },
+    { label: 'Famous Football Stadiums', value: 'Famous Football Stadiums' },
+  ];
+
   return (
     <>
       {(loading || isloading) && <Loader />}
@@ -98,17 +106,17 @@ const Map: FC = () => {
               className="flex justify-center"
               onSubmit={withSubmit(handleExecAction)}
             >
-              <select
+              <input
                 {...register('inputPrompts', { required: true })}
+                type="text"
+                className="w-1/3 p-2 text-black rounded-l-lg"
+                placeholder="Describe anything that's got specific coordinates – like a spot on a map or an event in time."
+              />
+              <Select
+                {...register('inputPrompts', { required: true })}
+                options={selectOptions}
                 className="w-2/3 p-2 text-black rounded-l-lg"
-              >
-                <option value="">Select a category</option>
-                <option value="Famous Places">Famous Places</option>
-                <option value="Famous Food">Famous Food</option>
-                <option value="Famous Football Stadiums">
-                  Famous Football Stadiums
-                </option>
-              </select>
+              />
               <ToolTip
                 className="rounded-xl"
                 text="Have an AI craft a description for you."
