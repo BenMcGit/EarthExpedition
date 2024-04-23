@@ -1,11 +1,10 @@
 import { fetchApi } from '@/utils/fetch';
 
-export const requestGenerateLocation = async () => {
-  //TODO: clear any
-  const res: any = await fetchApi({
+export const requestGenerateLocation = async (inputPrompt: any) => {
+  const res = await fetchApi({
     path: '/location',
     method: 'POST',
+    params: { inputPrompts: inputPrompt },
   });
-  const data = await res.location;
-  return data;
+  return res.location;
 };
