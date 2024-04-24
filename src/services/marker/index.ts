@@ -55,6 +55,7 @@ export const unsubDestinationData = useMarkerStore.subscribe(
   (state) => state.destinationData,
   async (des) => {
     try {
+      if (!des) return;
       const data = await fetchApi<{ travelTip: string }>({
         path: '/travelTip',
         method: 'POST',
