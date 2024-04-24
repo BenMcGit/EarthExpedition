@@ -4,7 +4,11 @@ import React, { useState, FC, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { LatLngExpression } from 'leaflet';
 import { useForm, useWatch } from 'react-hook-form';
-import { useMarkerData, useRequestMarkerData } from '@/services/marker';
+import {
+  useMarkerData,
+  useRequestMarkerData,
+  useClearMarkerData,
+} from '@/services/marker';
 import { requestGenerateLocation } from '@/services/location';
 import useInTransaction from '@/hooks/useIntransaction';
 import { useSetShowBoard } from '../Board';
@@ -21,6 +25,11 @@ import TravelBoard from '@/modules/travelBoard';
 import Select from '../Select';
 
 const initialCoordinates = [37.7749, -122.4194];
+const selectOptions = [
+  { label: 'Famous Places', value: 'Famous Places' },
+  { label: 'Famous Food', value: 'Famous Food' },
+  { label: 'Famous Football Stadiums', value: 'Famous Football Stadiums' },
+];
 
 interface SubmitForm {
   inputPrompts: string;
@@ -29,6 +38,7 @@ interface SubmitForm {
 const Map: FC = () => {
   const markerData = useMarkerData();
   const requestMarkerData = useRequestMarkerData();
+  const clearMarkerData = useClearMarkerData();
   const setShowBoard = useSetShowBoard();
   const [isloading, setIsLoading] = useState<boolean>(false);
   const {
@@ -63,27 +73,24 @@ const Map: FC = () => {
     });
   };
 
-  const handleSubmit = useCallback(async (data: SubmitForm) => {
-    try {
-      const { inputPrompts } = data;
-      await requestMarkerData(inputPrompts);
-      reset({
-        inputPrompts: '',
-      });
-      setShowBoard(true);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  const handleSubmit = useCallback(
+    async (data: SubmitForm) => {
+      try {
+        const { inputPrompts } = data;
+        clearMarkerData();
+        setShowBoard(false);
+        await requestMarkerData(inputPrompts);
+        reset({
+          inputPrompts: '',
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [clearMarkerData],
+  );
 
   const { handleExecAction, loading } = useInTransaction(handleSubmit);
-
-  const selectOptions = [
-    { label: 'Select a category', value: '' },
-    { label: 'Famous Places', value: 'Famous Places' },
-    { label: 'Famous Food', value: 'Famous Food' },
-    { label: 'Famous Football Stadiums', value: 'Famous Football Stadiums' },
-  ];
 
   return (
     <>
@@ -106,6 +113,14 @@ const Map: FC = () => {
       <TravelBoard />
       <div className="absolute top-3 left-0 w-full z-[10000] p-3">
         <div className="flex justify-end space-x-2">
+          {/* TODO: Bad data flow design */}
+          <Select
+            {...register('inputPrompts', { required: true })}
+            options={selectOptions}
+            className="w-2/3 p-2 rounded-l-lg bg-[#3B81F6]"
+            placeholder="Choose a category..."
+          />
+          {/* TODO: ToolTip should fix the overflowing problem automatically */}
           <ToolTip
             options={{ placement: 'bottom-end' }}
             className="rounded-xl"
@@ -151,11 +166,6 @@ const Map: FC = () => {
                 type="text"
                 className="w-2/3 p-2 text-black rounded-lg"
                 placeholder="Search anything with coordinates..."
-              />
-              <Select
-                {...register('inputPrompts', { required: true })}
-                options={selectOptions}
-                className="w-2/3 p-2 text-black rounded-l-lg"
               />
               <button
                 type="submit"

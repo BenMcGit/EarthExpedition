@@ -6,23 +6,23 @@ dotenv.config();
 const openai = new OpenAI();
 
 export default async function handler(req: any, res: any) {
-  const category = req.body.inputPrompts;
-  const systemMessage = `You only return a cryptic phrase about a ${category.toLowerCase()} location on earth. This location has exact coordinates and you should be able to determine them but not return them. Do not return any quotation marks.`;
   try {
     const gpt4Completion = await openai.chat.completions.create({
-      //TODO:Test
-      model: 'gpt-3.5-turbo',
-      // model: 'gpt-4',
+      model: 'gpt-4',
       messages: [
         {
           role: 'system',
-          content: systemMessage,
+          content:
+            'You only return in JSON an unique and cultrual travel tip of the given coordination of the location with about 80 words in the style of Pico Lyer with key of travelTip',
         },
+        { role: 'user', content: `the coordination: ${req.body.value}` },
       ],
     });
+
     const responseText = gpt4Completion.choices[0]?.message?.content;
-    if (responseText) {
-      res.status(200).json({ location: responseText });
+    if (responseText && responseText[0] === '{') {
+      const json = JSON.parse(responseText);
+      res.status(200).json(json);
     } else {
       res.status(200).json({ tryAgain: true });
     }

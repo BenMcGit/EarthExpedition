@@ -13,7 +13,7 @@ export default async function handler(req: any, res: any) {
         {
           role: 'system',
           content:
-            'You only return in JSON a coordinates key with a value in this format [43.6426, -79.3871], then a title of the location with a title key, then a description giving more details, then an unique and cultrual travel tip of the city of the location with about 80 words in the style of Pico Lyer with key of travelTip',
+            'You only return in JSON a coordinates key with a value in this format [43.6426, -79.3871], then a title of the location with a title key, then a description giving more details',
         },
         { role: 'user', content: req.body.value },
       ],
