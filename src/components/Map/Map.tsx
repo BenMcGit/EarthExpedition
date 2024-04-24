@@ -106,7 +106,11 @@ const Map: FC = () => {
       <TravelBoard />
       <div className="absolute top-3 left-0 w-full z-[10000] p-3">
         <div className="flex justify-end space-x-2">
-          <ToolTip className="rounded-xl" text="Learn something new!">
+          <ToolTip
+            options={{ placement: 'bottom-end' }}
+            className="rounded-xl"
+            text="Learn something new!"
+          >
             <button
               className="btn bg-blue-500 p-2 rounded-lg hover:ring-2"
               onClick={handleGeneration}
@@ -114,7 +118,11 @@ const Map: FC = () => {
               <SparkleIcon className="h-4 w-4 bg-blue-500 text-yellow-400 fill-yellow-400 hover:animate-pulse" />
             </button>
           </ToolTip>
-          <ToolTip className="rounded-xl" text="Reset">
+          <ToolTip
+            options={{ placement: 'bottom-end' }}
+            className="rounded-xl"
+            text="Reset"
+          >
             <button
               className="btn bg-blue-500 p-2 rounded-lg hover:ring-2"
               onClick={handleReset}
