@@ -8,6 +8,8 @@ import {
   useInteractions,
   useDismiss,
   offset,
+  flip,
+  shift,
   type Placement,
 } from '@floating-ui/react';
 
@@ -47,7 +49,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const [isHover, setIsHover] = useState(false);
 
     const { refs, floatingStyles, context } = useFloating({
-      middleware: [offset(4)],
+      middleware: [offset(4), flip(), shift()],
       placement: placement,
       whileElementsMounted: autoUpdate,
       open: isOpen,
@@ -86,8 +88,8 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={refs.setReference}
           {...getReferenceProps()}
           className={cx(
-            'pl-[12px] pr-[7px] flex items-center justify-between w-[240px] h-[50px] text-[14px] leading-[22px] rounded-[8px] border-[#DCDEE0] border-[1px] border-solid focus:border-[#FFA14A] hover:border-[#FFA14A] cursor-pointer',
-            isOpen && 'border-[#FFA14A]',
+            'pl-[12px] pr-[4px] flex items-center justify-between w-[240px] h-[32px] text-[14px] leading-[22px] rounded-[8px] border-[#3B81F6] border-[1px] border-solid focus:border-[#3B81F6] hover:border-[#3B81F6] cursor-pointer',
+            isOpen && 'border-[#3B81F6]',
             className,
           )}
           onMouseEnter={handleMouseEnter}
@@ -95,9 +97,9 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         >
           {/* Selected or placeholder */}
           {selectedOption ? (
-            <span className="text-[#323233]">{selectedOption.label}</span>
+            <span className="text-[#3B81F6]">{selectedOption.label}</span>
           ) : (
-            <span className="text-[#454647]">{placeholder}</span>
+            <span className="text-[#9BA3AF]">{placeholder}</span>
           )}
         </div>
         {isOpen && (
@@ -112,7 +114,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             {options.map((option) => (
               <div
                 key={option.value}
-                className="pl-[12px] flex items-center w-full h-[32px] text-[14px] leading-[22px] text-[#323233] bg-[#FFFFFF] hover:bg-[#FFF6ED] cursor-pointer"
+                className={cx(
+                  'pl-[12px] flex items-center w-full h-[32px] text-[14px] leading-[22px] text-[#323233] bg-[#FFFFFF] hover:bg-[#E6F4FF] cursor-pointer',
+                  selectedOption?.value == option.value && 'bg-[#E6F4FF]',
+                )}
                 onClick={() => handleSelect(option)}
               >
                 {option.label}
