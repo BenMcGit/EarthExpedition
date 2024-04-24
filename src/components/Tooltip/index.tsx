@@ -10,7 +10,7 @@ interface TooltipProps
   > {}
 
 const ToolTip: React.FC<
-  TooltipProps & { text?: string; className?: string }
+  TooltipProps & { text: string; className?: string }
 > = ({
   children,
   text,

@@ -20,7 +20,7 @@ import {
   type Placement,
 } from '@floating-ui/react';
 
-interface Option {
+export interface Option {
   label: string;
   value: string | number;
 }
