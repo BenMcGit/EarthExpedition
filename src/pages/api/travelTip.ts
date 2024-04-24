@@ -8,9 +8,7 @@ const openai = new OpenAI();
 export default async function handler(req: any, res: any) {
   try {
     const gpt4Completion = await openai.chat.completions.create({
-      //TODO:Test
-      model: 'gpt-3.5-turbo',
-      // model: 'gpt-4',
+      model: 'gpt-4',
       messages: [
         {
           role: 'system',
