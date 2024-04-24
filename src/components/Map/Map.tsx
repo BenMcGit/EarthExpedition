@@ -117,7 +117,7 @@ const Map: FC = () => {
           <Select
             {...register('inputPrompts', { required: true })}
             options={selectOptions}
-            className="w-2/3 p-2 text-black rounded-l-lg"
+            className="w-2/3 p-2 rounded-l-lg bg-[#3B81F6]"
             placeholder="Choose a category..."
           />
           {/* TODO: ToolTip should fix the overflowing problem automatically */}

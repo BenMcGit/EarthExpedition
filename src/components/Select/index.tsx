@@ -97,7 +97,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         >
           {/* Selected or placeholder */}
           {selectedOption ? (
-            <span className="text-[#3B81F6]">{selectedOption.label}</span>
+            <span className="text-[#FACC14]">{selectedOption.label}</span>
           ) : (
             <span className="text-[#9BA3AF]">{placeholder}</span>
           )}
