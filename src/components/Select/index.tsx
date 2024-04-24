@@ -1,5 +1,12 @@
 'use client';
-import { useState, ComponentProps, useCallback, forwardRef } from 'react';
+import {
+  useState,
+  ComponentProps,
+  useCallback,
+  forwardRef,
+  ChangeEvent,
+  useEffect,
+} from 'react';
 import cx from 'clsx';
 import {
   useFloating,
@@ -28,6 +35,7 @@ type SelectProps = OverWrite<
   }
 >;
 
+//TODO: re-render issues
 const Select = forwardRef<HTMLSelectElement, SelectProps>(
   (
     {
@@ -38,6 +46,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       placement = 'top',
       onChange,
       name,
+      value,
       ...props
     },
     ref,
@@ -81,8 +90,27 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
       [onChange],
     );
 
+    //TODO:temporary solution, there must be a better flow
+    useEffect(() => {
+      if (!value) {
+        setSelectedOption(defaultValue);
+      }
+    }, [value]);
+
     return (
       <div className="relative" suppressHydrationWarning>
+        {/* <select
+          className="hidden"
+          ref={ref}
+          name={name}
+          onChange={handleControl}
+        >
+          {options.map((option) => (
+            <option key={`${option.value}-native`} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select> */}
         {/* Select */}
         <div
           ref={refs.setReference}

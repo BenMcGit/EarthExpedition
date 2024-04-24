@@ -35,6 +35,7 @@ interface SubmitForm {
   inputPrompts: string;
 }
 
+//TODO: too many responsibilities
 const Map: FC = () => {
   const markerData = useMarkerData();
   const requestMarkerData = useRequestMarkerData();
@@ -117,8 +118,9 @@ const Map: FC = () => {
           <Select
             {...register('inputPrompts', { required: true })}
             options={selectOptions}
+            value={inputPrompts}
             className="w-2/3 p-2 rounded-l-lg bg-[#3B81F6]"
-            placeholder="Choose a category..."
+            placeholder="Choose a category"
           />
           {/* TODO: ToolTip should fix the overflowing problem automatically */}
           <ToolTip
