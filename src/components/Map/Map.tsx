@@ -18,6 +18,7 @@ import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
 import TravelBoard from '@/modules/travelBoard';
+import Select from '../Select';
 
 const initialCoordinates = [37.7749, -122.4194];
 
@@ -42,16 +43,18 @@ const Map: FC = () => {
   const inputPrompts = useWatch({ control, name: 'inputPrompts' });
 
   const handleGeneration = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const data = await requestGenerateLocation();
-      setValue('inputPrompts', data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+    if (inputPrompts) {
+      try {
+        setIsLoading(true);
+        const data = await requestGenerateLocation(inputPrompts);
+        setValue('inputPrompts', data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, []);
+  }, [inputPrompts]);
 
   const handleReset = () => {
     setShowBoard(false);
@@ -74,6 +77,13 @@ const Map: FC = () => {
   }, []);
 
   const { handleExecAction, loading } = useInTransaction(handleSubmit);
+
+  const selectOptions = [
+    { label: 'Select a category', value: '' },
+    { label: 'Famous Places', value: 'Famous Places' },
+    { label: 'Famous Food', value: 'Famous Food' },
+    { label: 'Famous Football Stadiums', value: 'Famous Football Stadiums' },
+  ];
 
   return (
     <>
@@ -133,6 +143,11 @@ const Map: FC = () => {
                 type="text"
                 className="w-2/3 p-2 text-black rounded-lg"
                 placeholder="Search anything with coordinates..."
+              />
+              <Select
+                {...register('inputPrompts', { required: true })}
+                options={selectOptions}
+                className="w-2/3 p-2 text-black rounded-l-lg"
               />
               <button
                 type="submit"
