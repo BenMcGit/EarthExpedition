@@ -117,7 +117,7 @@ const Map: FC = () => {
               {...register('inputPrompts', { required: true })}
               type="text"
               className="w-2/3 p-2 text-black rounded-lg"
-              placeholder="Enter your prompts"
+              placeholder="Enter topic of the wanted location"
             />
             <span className="text-[#facc14]">or</span>
             <Select
@@ -125,7 +125,7 @@ const Map: FC = () => {
               options={selectOptions}
               value={inputPrompts}
               className="p-2 w-2/3 h-[32px] bg-[#3B81F6] rounded-l-lg"
-              placeholder="Choose a category"
+              placeholder="Choose a topic"
             />
           </form>
           {/* TODO: ToolTip should fix the overflowing problem automatically */}
