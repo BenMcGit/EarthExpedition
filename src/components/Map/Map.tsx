@@ -43,6 +43,7 @@ const Map: FC = () => {
   const clearMarkerData = useClearMarkerData();
   const setShowBoard = useSetShowBoard();
   const [isloading, setIsLoading] = useState<boolean>(false);
+  const [question, setQuestion] = useState<string>('');
   const {
     register,
     control,
@@ -54,12 +55,12 @@ const Map: FC = () => {
 
   const inputPrompts = useWatch({ control, name: 'inputPrompts' });
 
-  const ƒ = useCallback(async () => {
+  const handleGenerateQues = useCallback(async () => {
     if (inputPrompts) {
       try {
         setIsLoading(true);
         const data = await requestGenerateLocation(inputPrompts);
-        setValue('inputPrompts', data);
+        setQuestion(data);
       } catch (error) {
         console.error(error);
       } finally {
@@ -73,20 +74,16 @@ const Map: FC = () => {
     reset();
   };
 
-  const handleSubmit = useCallback(
-    async (data: SubmitForm) => {
-      try {
-        const { inputPrompts } = data;
-        clearMarkerData();
-        setShowBoard(false);
-        await requestMarkerData(inputPrompts);
-        reset();
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [clearMarkerData],
-  );
+  const handleSubmit = useCallback(async () => {
+    try {
+      clearMarkerData();
+      setShowBoard(false);
+      await requestMarkerData(question);
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [clearMarkerData, question]);
 
   const { handleExecAction, loading } = useInTransaction(handleSubmit);
 
@@ -115,8 +112,9 @@ const Map: FC = () => {
           <form className="flex flex-row items-center space-x-2">
             <input
               {...register('inputPrompts', { required: true })}
+              value={valueToLabel(inputPrompts, selectOptions)}
               type="text"
-              className="w-2/3 p-2 text-black rounded-lg"
+              className="w-2/3 min-w-[350px] p-2 text-black rounded-lg"
               placeholder="Enter topic of the wanted location"
             />
             <span className="text-[#facc14]">or</span>
@@ -136,7 +134,7 @@ const Map: FC = () => {
           >
             <button
               className="btn bg-blue-500 p-2 rounded-lg hover:ring-2"
-              onClick={ƒ}
+              onClick={handleGenerateQues}
             >
               <SparkleIcon className="h-4 w-4 bg-blue-500 text-yellow-400 fill-yellow-400 hover:animate-pulse" />
             </button>
@@ -157,10 +155,10 @@ const Map: FC = () => {
       </div>
       <div className="absolute bottom-5 left-0 w-full z-[10000] p-3">
         <div className="flex flex-row items-center justify-end">
-          {inputPrompts && (
+          {question && (
             <div className="flex items-center justify-center min-w-[60%]">
               <h1 className="w-full text-xl font-bold text-black p-2 bg-white ring-4 rounded-md ring-slate-500">
-                {valueToLabel(inputPrompts, selectOptions) ?? inputPrompts}
+                {question}
               </h1>
             </div>
           )}
@@ -171,7 +169,7 @@ const Map: FC = () => {
                 ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               disabled={loading}
               value="Submit"
-              onClick={withSubmit(handleExecAction)}
+              onClick={handleExecAction}
             >
               <SearchIcon className="h-4 w-8 bg-blue-500 text-yellow-400" />
             </button>
