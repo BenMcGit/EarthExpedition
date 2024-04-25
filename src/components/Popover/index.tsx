@@ -104,7 +104,7 @@ const Popover: React.FC<PopoverProps> = ({
 
   return (
     <>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div ref={refs.setReference} {...getReferenceProps()} className="w-fit">
         {children}
       </div>
       {controledOpen && isOpen && isMounted && (

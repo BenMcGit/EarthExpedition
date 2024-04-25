@@ -1,10 +1,11 @@
 'use client';
-import React, { useCallback, HTMLAttributes } from 'react';
+import React, { useEffect, useCallback, HTMLAttributes } from 'react';
 // import { atom, useAtom } from 'jotai'
 import { create } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import cx from 'clsx';
-import { CloseIcon } from '../Icons';
+import { useSpring, animated as a } from '@react-spring/web';
+import { CloseIcon } from '@/components/Icons';
 
 interface Props {
   title?: string;
@@ -32,28 +33,42 @@ export const useSetShowBoard = () => useShowBoardStore(selectors.setShowBoard);
 export const useShowBoard = () => useShowBoardStore(selectors.showBoard);
 export const useBoard = () => useShowBoardStore(selectors.board);
 
-// export const toggleShowBoardAtom = atom(
-//   (get) => get(showBoardAtom),
-//   (get, set) => {
-//     const update = !get(showBoardAtom)
-//     set(showBoardAtom, update)
-//   }
-// )ƒ
-
 const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
   className,
   title,
   children,
 }) => {
-  // const [showBoard, setShowBoard] = useAtom(showBoardAtom)
   const { showBoard, setShowBoard } = useBoard();
+
+  const [springs, api] = useSpring(() => ({
+    from: {
+      transform: 'scale(1,0)',
+    },
+    to: {
+      transform: 'scale(1,1)',
+    },
+    duration: 500,
+  }));
 
   const handleClose = useCallback(() => {
     setShowBoard(false);
   }, []);
 
+  useEffect(() => {
+    if (!showBoard) return;
+    api.start({
+      from: {
+        transform: 'scale(1,0)',
+      },
+      to: {
+        transform: 'scale(1,1)',
+      },
+    });
+  }, [showBoard]);
+
   return (
-    <div
+    <a.div
+      style={springs}
       className={cx(
         'p-[24px] text-[16px] leading-[24px] rounded-[12px] border-[1px] border-solid border-[#f7f7f7] bg-[rgba(255,255,255,0.08)] backdrop-blur-[24px] z-[1000]',
         'pb-20px',
@@ -70,7 +85,7 @@ const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
         </div>
       </div>
       {children}
-    </div>
+    </a.div>
   );
 };
 
