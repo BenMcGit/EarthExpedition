@@ -18,6 +18,7 @@ const ZoomHandler: FC<ZoomHandlerProps> = ({ markerData, onZoomEnd }) => {
       });
     }
   };
+  
   useMapEvents({
     zoomend: onZoomEnd,
   });

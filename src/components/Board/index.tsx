@@ -2,7 +2,6 @@
 import React, { useEffect, useCallback, HTMLAttributes } from 'react';
 // import { atom, useAtom } from 'jotai'
 import { create } from 'zustand';
-import { useShallow } from 'zustand/react/shallow';
 import cx from 'clsx';
 import { useSpring, animated as a } from '@react-spring/web';
 import { CloseIcon } from '@/components/Icons';
