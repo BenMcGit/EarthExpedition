@@ -14,7 +14,7 @@ import {
 import { atom, useAtom, useSetAtom } from 'jotai';
 import cx from 'clsx';
 import { uniqueId } from 'lodash-es';
-import { CloseIcon } from '../Icons';
+import { XCircleIcon } from '@heroicons/react/24/solid'
 import renderReactNode from '@/utils/renderReactNode';
 
 export interface Modal {
@@ -113,7 +113,7 @@ const ModalRender: React.FC = () => {
                     className="w-fit h-fit -translate-y-[11px] cursor-pointer"
                     onClick={() => setIsOpen(false)}
                   >
-                    <CloseIcon />
+                    <XCircleIcon className="size-6" />
                   </div>
                 </div>
                 {/* <div className="h-[1px] bg-[#EBEDF0] pointer-events-none" /> */}

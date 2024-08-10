@@ -3,11 +3,6 @@
 import React, { useState, FC } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { LatLngExpression } from 'leaflet';
-import {
-  useMarkerData,
-  useRequestMarkerData,
-  useClearMarkerData,
-} from '@/services/marker';
 import Loader from './Loader';
 import ZoomHandler from './ZoomHandler';
 import LinePlot from './LinePlot';
@@ -15,25 +10,15 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
-import { useSetShowBoard } from '@/components/Board';
 import { useFormState, useFormStatus } from 'react-dom';
 import determineCoordinates from '@/actions';
 
 const initialCoordinates = [37.7749, -122.4194];
 
-interface SubmitForm {
-  inputPrompts: string;
-}
-
 const Map: FC = () => {
-  const markerData = useMarkerData();
   const [state, formAction] = useFormState(determineCoordinates, {});
   const { pending } = useFormStatus();
-  const requestMarkerData = useRequestMarkerData();
-  const clearMarkerData = useClearMarkerData();
-  const setShowBoard = useSetShowBoard();
   const [isloading, setIsLoading] = useState<boolean>(pending);
-  const [question, setQuestion] = useState<string>('');
 
   return (
     <>
