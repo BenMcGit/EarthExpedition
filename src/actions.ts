@@ -3,6 +3,7 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import { z } from 'zod';
+import { Location } from '@/components/Map/Map';
 
 dotenv.config();
 
@@ -14,7 +15,23 @@ const schema = z.object({
   }),
 });
 
-export default async function determineCoordinates(state: any, formData: FormData) {
+function isLocation(obj: any): obj is Location {
+  return (
+    typeof obj === 'object' &&
+    Array.isArray(obj.coordinates) &&
+    obj.coordinates.length === 2 &&
+    typeof obj.coordinates[0] === 'number' &&
+    typeof obj.coordinates[1] === 'number' &&
+    typeof obj.title === 'string' &&
+    typeof obj.description === 'string' &&
+    typeof obj.image === 'string'
+  );
+}
+
+export default async function determineCoordinates(
+  state: any,
+  formData: FormData,
+): Promise<{ locations: Location[]; error: any }> {
   // Validate the input using Zod schema
   const validatedFields = schema.safeParse({
     prompt: formData.get('prompt'),
@@ -23,7 +40,8 @@ export default async function determineCoordinates(state: any, formData: FormDat
   // Return early if the input is invalid
   if (!validatedFields.success) {
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      locations: [],
+      error: validatedFields.error.flatten().fieldErrors,
     };
   }
 
@@ -33,21 +51,50 @@ export default async function determineCoordinates(state: any, formData: FormDat
       messages: [
         {
           role: 'system',
+
           content:
-            'You only return in JSON a coordinates key with a value in this format [latitude, longitude], then a title of the location with a title key, then a description giving more details, then a link of an image related to the location with an image key.',
+            "You are a travel expert and you are helping friends find the perfect place to visit based on their input. \
+            You must always return valid JSON and nothing else. \
+            The json contains the following properties: \
+            'coordinates' which is an array of two floats [latitude, longitude], \
+            'title' which is the name of the location, \
+            'description' which is a eye catching description of the location, \
+            'image' which is a valid url to an image of the location. \
+            Please return an array with 3 possible locations to visit that match the input criteria. \
+            Please make sure each place you suggest is at least 500 miles away from the other places.",
         },
         { role: 'user', content: validatedFields.data.prompt as string },
       ],
     });
 
     const responseText = gpt4Completion.choices[0]?.message?.content;
-    if (responseText && responseText[0] === '{') {
+    console.log(responseText);
+    if (responseText && (responseText[0] === '{' || responseText[0] === '[')) {
       const json = JSON.parse(responseText);
-      return json;
+
+      const locations: Location[] = [];
+
+      if (Array.isArray(json)) {
+        json.forEach((location: any) => {
+          if (isLocation(location)) {
+            locations.push(location);
+          }
+        });
+      } else if (isLocation(json)) {
+        locations.push(json);
+      }
+
+      return {
+        locations,
+        error: null,
+      };
     } else {
-      return { tryAgain: true };
+      return {
+        locations: [],
+        error: { message: 'Invalid response from OpenAI' },
+      };
     }
   } catch (error) {
-    return { error };
+    return { locations: [], error };
   }
 }
