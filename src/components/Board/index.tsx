@@ -2,10 +2,9 @@
 import React, { useEffect, useCallback, HTMLAttributes } from 'react';
 // import { atom, useAtom } from 'jotai'
 import { create } from 'zustand';
-import { useShallow } from 'zustand/react/shallow';
 import cx from 'clsx';
 import { useSpring, animated as a } from '@react-spring/web';
-import { CloseIcon } from '@/components/Icons';
+import { XCircleIcon } from '@heroicons/react/24/solid'
 
 interface Props {
   title?: string;
@@ -81,7 +80,7 @@ const Board: React.FC<HTMLAttributes<HTMLDivElement> & Props> = ({
           {title}
         </p>
         <div className="w-fit h-fit cursor-pointer" onClick={handleClose}>
-          <CloseIcon />
+          <XCircleIcon />
         </div>
       </div>
       {children}
