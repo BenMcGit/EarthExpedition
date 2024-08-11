@@ -85,7 +85,7 @@ const Map: FC = () => {
         />
         <LinePlot endCoordinates={selectedLocation} />
       </MapContainer>
-      <div className="absolute top-5 right-5 w-1/4 max-h-screen bg-transparent p-4 z-[10000]">
+      <div className="absolute top-1 md:top-5 right-1 md:right-5 md:w-1/4 max-h-screen bg-transparent p-1 md:p-4 z-[10000]">
         <div className="flex flex-col items-end space-x-2">
           {state.locations &&
             state.locations.length > 0 &&
@@ -96,7 +96,7 @@ const Map: FC = () => {
                 className="collapse collapse-plus bg-base-100 border-base-300 border"
                 onClick={() => handleLocationUpdate(location)}
               >
-                <div className="collapse-title text-lg font-medium">
+                <div className="collapse-title text-sm md:text-lg font-medium ">
                   {location.title}
                 </div>
                 <div className="collapse-content">
