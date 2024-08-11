@@ -3,7 +3,7 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
 import { z } from 'zod';
-import { Location } from '@/components/Map/Map';
+import { FormState, Location } from '@/components/Map/Map';
 
 dotenv.config();
 
@@ -31,7 +31,7 @@ function isLocation(obj: any): obj is Location {
 export default async function determineCoordinates(
   state: any,
   formData: FormData,
-): Promise<{ locations: Location[]; error: any }> {
+): Promise<FormState> {
   // Validate the input using Zod schema
   const validatedFields = schema.safeParse({
     prompt: formData.get('prompt'),
@@ -40,10 +40,13 @@ export default async function determineCoordinates(
   // Return early if the input is invalid
   if (!validatedFields.success) {
     return {
+      prompt: '',
       locations: [],
       error: validatedFields.error.flatten().fieldErrors,
     };
   }
+
+  const validPrompt = validatedFields.data.prompt as string;
 
   try {
     const gpt4Completion = await openai.chat.completions.create({
@@ -63,12 +66,11 @@ export default async function determineCoordinates(
             Please return an array with 3 possible locations to visit that match the input criteria. \
             Please make sure each place you suggest is at least 500 miles away from the other places.",
         },
-        { role: 'user', content: validatedFields.data.prompt as string },
+        { role: 'user', content: validPrompt },
       ],
     });
 
     const responseText = gpt4Completion.choices[0]?.message?.content;
-    console.log(responseText);
     if (responseText && (responseText[0] === '{' || responseText[0] === '[')) {
       const json = JSON.parse(responseText);
 
@@ -85,16 +87,22 @@ export default async function determineCoordinates(
       }
 
       return {
+        prompt: validPrompt,
         locations,
         error: null,
       };
     } else {
       return {
+        prompt: validPrompt,
         locations: [],
         error: { message: 'Invalid response from OpenAI' },
       };
     }
   } catch (error) {
-    return { locations: [], error };
+    return {
+      prompt: validPrompt,
+      locations: [],
+      error,
+    };
   }
 }
