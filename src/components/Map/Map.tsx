@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, FC, useEffect } from 'react';
+import React, { useState, FC, useEffect, useActionState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { LatLngExpression } from 'leaflet';
-import Loader from './Loader';
 import ZoomHandler from './ZoomHandler';
 import LinePlot from './LinePlot';
 import 'leaflet/dist/leaflet.css';
@@ -22,20 +21,34 @@ export type Location = {
   image: string;
 };
 
+export type FormState = {
+  prompt: string;
+  locations: Location[];
+  error: any;
+};
+
 const Map: FC = () => {
+  // const [state, formAction] = useActionState(determineCoordinates, {
+  //   prompt: '',
+  //   locations: [],
+  //   error: null,
+  // });
   const [state, formAction] = useFormState(determineCoordinates, {
+    prompt: '',
     locations: [],
     error: null,
   });
-  const { pending } = useFormStatus();
-  const [isloading, setIsLoading] = useState<boolean>(pending);
+  // const { pending } = useFormStatus();
+  const [loading, setLoading] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null,
   );
 
-  console.log(state);
+  console.log('pending', loading);
+
   useEffect(() => {
     if (state.locations.length > 0) {
+      setLoading(false);
       setSelectedLocation(state.locations[0]);
     } else {
       setSelectedLocation(null);
@@ -46,9 +59,17 @@ const Map: FC = () => {
     setSelectedLocation(location);
   };
 
+  const handleSubmit = () => {
+    setLoading(true);
+  };
+
   return (
     <>
-      {pending && <Loader />}
+      {loading && (
+        <div className="absolute left-1/2 top-1/2 z-[10000]">
+          <span className="loading loading-infinity loading-lg"></span>
+        </div>
+      )}
       <MapContainer
         center={initialCoordinates as LatLngExpression}
         zoom={11}
@@ -60,35 +81,22 @@ const Map: FC = () => {
         />
         <ZoomHandler
           markerData={selectedLocation}
-          onZoomEnd={() => setIsLoading(false)}
+          onZoomEnd={() => setLoading(false)} // TODO not needed?
         />
         <LinePlot endCoordinates={selectedLocation} />
       </MapContainer>
-      <div className="absolute top-2 items-center w-full z-[10000] p-2">
+      <div className="absolute top-5 right-5 w-1/4 max-h-screen bg-transparent p-4 z-[10000]">
         <div className="flex flex-col items-end space-x-2">
-          {/* {selectedLocation && (
-            <div className="card bg-base-100 w-96 shadow-xl max-h-screen overflow-auto">
-              <figure>
-                <img
-                  src={selectedLocation.image}
-                  alt={selectedLocation.title}
-                />
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title">{selectedLocation.title}</h2>
-                <p>{selectedLocation.description}</p>
-              </div>
-            </div>
-          )} */}
           {state.locations &&
             state.locations.length > 0 &&
-            state.locations.map((location) => (
+            state.locations.map((location, idx) => (
               <div
                 tabIndex={0}
-                className="collapse collapse-plus w-96 bg-base-100 border-base-300 border"
+                key={idx}
+                className="collapse collapse-plus bg-base-100 border-base-300 border"
                 onClick={() => handleLocationUpdate(location)}
               >
-                <div className="collapse-title text-xl font-medium">
+                <div className="collapse-title text-lg font-medium">
                   {location.title}
                 </div>
                 <div className="collapse-content">
@@ -102,15 +110,16 @@ const Map: FC = () => {
         <form
           action={formAction}
           className="flex items-center justify-center space-x-2"
+          onSubmit={handleSubmit}
         >
           <input
             name="prompt"
             type="text"
-            placeholder="Travel ideas..."
-            className="input input-bordered w-full max-w-xs"
+            placeholder="Search for anything..."
+            className="input input-bordered w-full max-w-lg"
           />
-          <button type="submit" className="btn" disabled={pending}>
-            Search
+          <button type="submit" className="btn" disabled={loading}>
+            {loading ? 'Searching...' : 'Search'}
           </button>
         </form>
       </div>
